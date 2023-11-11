@@ -1,0 +1,36 @@
+import pandas as pd
+import win32com.client as win32
+# importar base de dados
+
+tabela_garantias = pd.read_excel('Garantias.xlsx')
+
+
+# visualizar base de dados
+pd.set_option('display.max_columns', None)
+
+Garantias_feitas = tabela_garantias[['LOJAS', 'O.S']]
+
+# enviar email para as lojas
+
+outlook = win32.Dispatch('outlook.application')
+
+email = outlook.CreateItem(0)
+email.to = "lucasjoaquim84@gmail.com"
+email.Subject = "Relatório de Garantias"
+email.HTMLBody = f'''
+<p>Prezadas lojas,</p>
+
+<p> Segue as garantias feitas:</p>
+
+<p> Garantias:</p>
+{Garantias_feitas.to_html()}
+
+
+<p> Atenciosamente,</p>
+
+<p>Lucas.</p>
+
+
+'''
+email.Send()
+print("e-mail, enviado!")
